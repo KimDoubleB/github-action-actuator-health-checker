@@ -24,8 +24,8 @@ hpa:
   minReplicas: 2
 image:
   pullPolicy: IfNotPresent
-  repository: draft
-  tag: dev
+  repository: 10.105.6.24/kimdoubleb/jx-go-lang
+  tag: 0.0.1
 ingress:
   annotations: {}
   classAnnotation: ""
