@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"time"
 )
 
 type HealthResponse struct {
@@ -28,22 +27,21 @@ func main() {
 	}
 
 	if responseStatus != 200 || healthResponse.StatusMsg != "UP" {
-		sendSlackMessage(healthResponse, responseStatus, err)
+		sendSlackMessage(healthResponse, responseStatus, targetUrl, err)
 	}
 }
 
-func sendSlackMessage(healthResponse *HealthResponse, responseStatus int, err error) (string, string) {
+func sendSlackMessage(healthResponse *HealthResponse, responseStatus int, targetUrl string, err error) (string, string) {
 	slackToken := os.Getenv("INPUT_SLACK_TOKEN")
 	slackChannel := os.Getenv("INPUT_SLACK_CHANNEL")
-	slackApi := slack.New(slackToken)
 
-	now := time.Now().Format("2006-01-02 15:04:05")
+	slackApi := slack.New(slackToken)
 	attachment := slack.Attachment{
 		Pretext: ":scream: 서버가 죽었습니다 :scream:",
 		Fields: []slack.AttachmentField{
 			{
-				Title: "현재 시각",
-				Value: now,
+				Title: "서버 Health check URL",
+				Value: targetUrl,
 				Short: false,
 			},
 			{
